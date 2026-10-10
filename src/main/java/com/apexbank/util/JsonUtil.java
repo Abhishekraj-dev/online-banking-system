@@ -16,7 +16,9 @@ public class JsonUtil {
             String line;
             while ((line = reader.readLine()) != null) sb.append(line);
         }
-        return gson.fromJson(sb.toString(), classOfT);
+        String json = sb.toString();
+        System.out.println("DEBUG JSON PAYLOAD: [" + json + "]");
+        return gson.fromJson(json, classOfT);
     }
 
     public static void sendJsonResponse(HttpServletResponse resp, int statusCode, Object data) throws IOException {

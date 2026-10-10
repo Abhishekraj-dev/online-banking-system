@@ -6,10 +6,14 @@ com\apexbank\controller\auth\AuthApiServlet.class
 com\apexbank\util\JsonUtil$1ErrorResponse.class
 com\apexbank\util\JsonUtil.class
 TestEnv.class
+com\apexbank\model\Account.class
+com\apexbank\model\Transaction.class
 com\apexbank\util\DBConnectionPool.class
 com\apexbank\controller\customer\TransactionApiServlet.class
 com\apexbank\dao\impl\UserDaoImpl.class
-com\apexbank\controller\customer\TransactionApiServlet$TransferReq.class
 com\apexbank\controller\customer\UserApiServlet.class
 com\apexbank\controller\auth\AuthApiServlet$LoginReq.class
+com\apexbank\dao\impl\AccountDaoImpl.class
+com\apexbank\controller\customer\AccountApiServlet.class
 com\apexbank\model\User.class
+com\apexbank\util\TestDB.class
