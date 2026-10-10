@@ -1,8 +1,6 @@
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import { loginSchema } from '@/lib/validation/common';
-import prisma from '@/lib/db/prisma';
-import { verifyPassword } from '@/lib/security/password';
 import { ROLES } from '@/constants/roles';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
@@ -17,21 +15,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const parsed = loginSchema.safeParse(credentials);
         if (!parsed.success) return null;
 
-        const user = await prisma.user.findUnique({
-          where: { email: parsed.data.email },
-        });
+        try {
+          const res = await fetch('http://localhost:8081/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              email: parsed.data.email,
+              password: parsed.data.password,
+            }),
+          });
 
-        if (!user || !user.isActive) return null;
+          if (!res.ok) return null;
 
-        const isValid = await verifyPassword(parsed.data.password, user.passwordHash);
-        if (!isValid) return null;
+          const json = await res.json();
+          if (json.success && json.data) {
+            return {
+              id: json.data.id,
+              email: json.data.email,
+              name: json.data.name,
+              role: json.data.role,
+            };
+          }
+        } catch (error) {
+          console.error("Auth fetch error:", error);
+          return null;
+        }
 
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          role: user.role,
-        };
+        return null;
       },
     }),
   ],
